@@ -1,5 +1,5 @@
 from django.db import models
-from commons.models import UUIDMixin, TimeStampMixin, SaveAndCleanMixin
+from commons.models import UUIDMixin, TimeStampMixin, SaveAndCleanMixin, RoleChoices
 from users.models import User
 
 class SchoolClass(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
@@ -9,7 +9,7 @@ class Subject(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
     teacher = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True,
         related_name="subjects",
-        limit_choices_to={"role": "teacher"}
+        limit_choices_to={"role": RoleChoices.TEACHER}
     )
 
 class AcademicYear(UUIDMixin, SaveAndCleanMixin):
