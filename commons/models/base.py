@@ -20,10 +20,10 @@ class SaveAndCleanMixin(models.Model):
     def clean(self):
         super().clean()
         if self.name:
-            self.name = self.name.strip().Lower()
+            self.name = self.name.strip().lower()
 
     def save(self, *args, **kwargs):
-        self.name = self.name.strip().Lower()
+        self.name = self.name.strip().lower()
         super(SaveAndCleanMixin, self).save(*args, **kwargs)
 
 

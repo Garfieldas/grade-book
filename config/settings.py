@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'academics',
     'grades',
     'dashboard',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

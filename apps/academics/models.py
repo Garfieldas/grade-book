@@ -3,7 +3,8 @@ from commons.models import UUIDMixin, TimeStampMixin, SaveAndCleanMixin, RoleCho
 from users.models import User
 
 class SchoolClass(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
-    pass
+    def __str__(self):
+        return f"{self.name}"
 
 class Subject(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
     teacher = models.ForeignKey(
@@ -11,6 +12,9 @@ class Subject(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
         related_name="subjects",
         limit_choices_to={"role": RoleChoices.TEACHER}
     )
+
+    def __str__(self):
+        return f"{self.name} - {self.teacher}"
 
 class AcademicYear(UUIDMixin, SaveAndCleanMixin):
     name = models.CharField(max_length=255)
