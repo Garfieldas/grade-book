@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'commons',
     'users',
     'django_htmx',
+    'academics',
 ]
 
 MIDDLEWARE = [
