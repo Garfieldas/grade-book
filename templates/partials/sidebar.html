@@ -1,0 +1,43 @@
+  <div class="drawer-side">
+    <label
+      for="nav-drawer"
+      aria-label="close sidebar"
+      class="drawer-overlay"
+    ></label>
+
+    <aside
+      class="w-72 bg-base-200 border-r border-base-300 min-h-full flex flex-col"
+    >
+      <div class="p-5 border-b border-base-300">
+        <a class="text-xl font-semibold">School</a>
+        <p class="text-xs text-base-content/60">Dashboard</p>
+      </div>
+      <ul class="menu px-3 py-3 gap-1">
+        <li>
+          <RouterLink :to="{ name: 'students' }">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            Mokiniai
+          </RouterLink>
+        </li>
+
+        <li>
+          <RouterLink :to="{ name: 'teachers' }">
+            <i data-lucide="school" class="w-4 h-4"></i>
+            Mokytojai
+          </RouterLink>
+        </li>
+      </ul>
+
+      <div class="mt-auto p-3">
+        <div class="divider my-2"></div>
+        <button
+          class="btn btn-outline btn-sm w-full"
+          id="open-theme-settings"
+          @click="show = true"
+        >
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          Nustatymai
+        </button>
+      </div>
+    </aside>
+  </div>

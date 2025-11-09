@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}School Dashboard{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {% block head_extra %}{% endblock %}
+  </head>
+<body>
+  <div class="drawer lg:drawer-open">
+    <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content min-h-screen bg-base-100 flex flex-col">
+      {% include 'partials/header.html' %}
+      <main class="flex-1 min-w-0 p-5">
+        {% block content %}
+        {% endblock %}
+      </main>
+      {% include 'partials/footer.html' %}
+    </div>
+      {% include 'partials/sidebar.html' %}
+  </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+          lucide.createIcons();
+        }
+      } catch (e) {
+        console.warn('lucide init failed', e);
+      }
+      var y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+      var openBtn = document.getElementById('open-theme-settings');
+      var modal = document.getElementById('theme-modal');
+      var closeBtn = document.getElementById('close-theme-modal');
+      if (openBtn && modal && typeof modal.showModal === 'function') {
+        openBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { modal.showModal(); } catch (err) { console.warn(err); }
+        });
+      }
+      if (closeBtn && modal && typeof modal.close === 'function') {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { modal.close(); } catch (err) { console.warn(err); }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
