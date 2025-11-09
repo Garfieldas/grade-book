@@ -24,7 +24,8 @@
     </div>
       {% include 'partials/sidebar.html' %}
   </div>
-  </div>
+
+  {% include 'partials/themepicker.html' %}
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -37,21 +38,6 @@
       }
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
-      var openBtn = document.getElementById('open-theme-settings');
-      var modal = document.getElementById('theme-modal');
-      var closeBtn = document.getElementById('close-theme-modal');
-      if (openBtn && modal && typeof modal.showModal === 'function') {
-        openBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          try { modal.showModal(); } catch (err) { console.warn(err); }
-        });
-      }
-      if (closeBtn && modal && typeof modal.close === 'function') {
-        closeBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          try { modal.close(); } catch (err) { console.warn(err); }
-        });
-      }
     });
   </script>
 </body>

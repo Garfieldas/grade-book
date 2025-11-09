@@ -16,11 +16,6 @@
   </form>
 </dialog>
 <script>
-document.getElementById('year').textContent = new Date().getFullYear();
-
-if (window.lucide && lucide.createIcons) {
-  lucide.createIcons();
-}
 (function applyStoredTheme() {
   try {
     const stored = localStorage.getItem('theme');
