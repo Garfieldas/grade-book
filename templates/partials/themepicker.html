@@ -15,3 +15,52 @@
     <button>close</button>
   </form>
 </dialog>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+if (window.lucide && lucide.createIcons) {
+  lucide.createIcons();
+}
+(function applyStoredTheme() {
+  try {
+    const stored = localStorage.getItem('theme');
+    const theme = stored || document.documentElement.getAttribute('data-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (_) {}
+})();
+const openBtn = document.getElementById('open-theme-settings');
+const modal = document.getElementById('theme-modal');
+const select = document.getElementById('theme-select');
+const closeBtn = document.getElementById('close-theme-modal');
+
+if (openBtn && modal && select) {
+  openBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    select.value = current;
+    if (typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      modal.setAttribute('open', '');
+    }
+  });
+
+  select.addEventListener('change', () => {
+    const value = select.value;
+    document.documentElement.setAttribute('data-theme', value);
+    try {
+      localStorage.setItem('theme', value);
+    } catch (_) {}
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      if (typeof modal.close === 'function') {
+        modal.close();
+      } else {
+        modal.removeAttribute('open');
+      }
+    });
+  }
+}
+</script>
