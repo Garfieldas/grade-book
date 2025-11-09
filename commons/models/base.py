@@ -15,6 +15,7 @@ class UUIDMixin(models.Model):
         abstract = True
 
 class SaveAndCleanMixin(models.Model):
+    name = models.CharField(max_length=200, unique=True)
 
     def clean(self):
         super().clean()
