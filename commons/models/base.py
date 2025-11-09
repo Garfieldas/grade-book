@@ -27,4 +27,4 @@ class SaveAndCleanMixin(models.Model):
 
 
     class Meta:
-        abtract = True
+        abstract = True
