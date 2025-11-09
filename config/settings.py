@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'academics',
     'grades',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
