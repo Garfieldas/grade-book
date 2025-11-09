@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% if not user.is_authenticated %}
 <div class="flex items-center justify-center py-12">
   <form method="POST" class="w-full max-w-md">
     {% csrf_token %}
@@ -20,4 +21,5 @@
     </div>
   </form>
 </div>
+{% endif %}
 {% endblock %}
