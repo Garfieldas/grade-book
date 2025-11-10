@@ -5,6 +5,26 @@ from users.models import User
 class SchoolClass(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
     def __str__(self):
         return f"{self.name}"
+    
+class StudentClass(UUIDMixin, TimeStampMixin):
+    student = models.ForeignKey(User,
+            on_delete=models.CASCADE, related_name="student_class",
+            limit_choices_to={"role": RoleChoices.STUDENT}
+            )
+    school_class = models.ForeignKey(SchoolClass,
+            on_delete=models.SET_NULL, null=True, related_name="student")
+    
+    def __str__(self):
+        return f"{self.student} - {self.school_class}"
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields = ["student", "school_class"],
+                name="unique_student_class",
+                violation_error_message="student is already assigned to this class!"
+            )
+        ]
 
 class Subject(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
     teacher = models.ForeignKey(
