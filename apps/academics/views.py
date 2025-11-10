@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from academics.models import Schedule, StudentClass
-from users.models import User
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def student_schedule(request):
     user = request.user
     student_class = StudentClass.objects.filter(student=user).first()
