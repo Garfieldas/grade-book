@@ -13,16 +13,13 @@ def LoginView(request):
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             user = authenticate(request, email=email, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        messages.error(request, "Invalid email or password.")
-
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            messages.error(request, "Invalid email or password.")
     else:
         form = UserLoginForm()
-        context = {"form": form}
-    return render(request, 'users/login.html', context)
+    return render(request, 'users/login.html', {"form": form})
 
 def LogoutView(request):
     logout(request)
