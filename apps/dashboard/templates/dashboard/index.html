@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
+{% block content %}
+<div 
+  hx-get="{% url 'student_schedule' %}" 
+  hx-trigger="load"
+  hx-target="this"
+  hx-swap="innerHTML">
+  Loading dashboard...
+</div>
+{% endblock %}
 {% block navbar %}
     {% if user.is_authenticated %}
         {% if user.role == "TEACHER" %}
