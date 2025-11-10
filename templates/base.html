@@ -22,7 +22,8 @@
       </main>
       {% include 'partials/footer.html' %}
     </div>
-      {% include 'partials/sidebar.html' %}
+      {% block navbar %}
+      {% endblock %}
   </div>
 
   {% include 'partials/themepicker.html' %}

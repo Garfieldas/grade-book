@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block navbar %}
+    {% if user.is_authenticated %}
+        {% if user.role == "TEACHER" %}
+            {% include 'dashboard/partials/teacher_navbar.html' %}
+        {% elif user.role == "STUDENT" %}
+            {% include 'dashboard/partials/student_navbar.html' %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

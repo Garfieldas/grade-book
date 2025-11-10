@@ -14,7 +14,7 @@ def LoginView(request):
 
         if user is not None:
             login(request, user)
-            return redirect('/admin')
+            return redirect('home')
         messages.error(request, "Invalid email or password.")
 
     else:
