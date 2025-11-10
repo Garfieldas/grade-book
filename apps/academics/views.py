@@ -1,17 +1,18 @@
 from django.shortcuts import render
 from academics.models import Schedule, StudentClass
 from django.contrib.auth.decorators import login_required
+from academics.services.lessons import (
+    get_student_class,
+    DAYS_OF_WEEKS,
+    get_student_lessons
+)
 
 @login_required
 def student_schedule(request):
     user = request.user
-    student_class = StudentClass.objects.filter(student=user).first()
-    school_class = student_class.school_class if student_class else None
-    student_lessons = (
-        Schedule.objects.select_related("subject__teacher")
-        .filter(school_class=school_class) if school_class else Schedule.objects.none()
-    )
+    student_class = get_student_class(user)
+    monday = get_student_lessons(student_class, DAYS_OF_WEEKS[0][0])
     context = {
-        "student_lessons": student_lessons
+        "monday": monday
     }
     return render(request, "academics/schedule/student_shedule.html", context)
