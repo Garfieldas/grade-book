@@ -7,7 +7,7 @@ class SchoolClass(UUIDMixin, TimeStampMixin, SaveAndCleanMixin):
         return f"{self.name}"
     
 class StudentClass(UUIDMixin, TimeStampMixin):
-    student = models.ForeignKey(User,
+    student = models.OneToOneField(User,
             on_delete=models.CASCADE, related_name="student_class",
             limit_choices_to={"role": RoleChoices.STUDENT}
             )
@@ -40,6 +40,7 @@ class AcademicYear(UUIDMixin, SaveAndCleanMixin):
     name = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         constraints = [
@@ -59,6 +60,7 @@ class Semester(UUIDMixin, SaveAndCleanMixin):
     academic_year = models.ForeignKey(
         AcademicYear, on_delete=models.SET_NULL, null=True, related_name="semesters"
     )
+    is_active = models.BooleanField(default=True)
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -72,14 +74,26 @@ class Semester(UUIDMixin, SaveAndCleanMixin):
         return f"{self.name} ({self.academic_year})"
     
 class Schedule(UUIDMixin):
+    DAYS_OF_WEEKS = (
+        ("PIR", "Pirmadienis"),
+        ("AN", "Antradienis"),
+        ("TRE", "Trečiadienis"),
+        ("KET", "Ketvirtadienis"),
+        ("PEN", "Penktadienis"),
+
+    )
     school_class = models.ForeignKey(
         SchoolClass, on_delete=models.SET_NULL, null=True, related_name="schedule"
     )
     subject = models.ForeignKey(
         Subject, on_delete=models.SET_NULL, null=True, related_name="lessons"
     )
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    academic_year = models.ForeignKey(
+        AcademicYear, on_delete=models.SET_NULL, null=True, related_name="schedule"
+    )
+    day = models.CharField(max_length=3, choices=DAYS_OF_WEEKS)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     def __str__(self):
-        return f"{self.school_class} - {self.subject} ({self.start_date})"
+        return f"{self.school_class} - {self.subject} ({self.day})"
