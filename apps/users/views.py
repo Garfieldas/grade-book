@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 def LoginView(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == "POST":
         form = UserLoginForm(request.POST)
 
