@@ -6,6 +6,7 @@
           <th class="w-12">#</th>
           <th>Mokytoja</th>
           <th>Dalykas</th>
+          <th>Diena</th>
           <th>Pradžia</th>
           <th>Pabaiga</th>
         </tr>
@@ -18,8 +19,9 @@
           <td>
             <span class="badge badge-outline">{{ lesson.subject }}</span>
           </td>
-          <td><a class="link">{{ lesson.start_date }}</a></td>
-          <td><a class="link">{{ lesson.end_date }}</a></td>
+          <td><a class="link">{{ lesson.get_day_display }}</a></td>
+          <td><a class="link">{{ lesson.start_time }}</a></td>
+          <td><a class="link">{{ lesson.end_time }}</a></td>
         </tr>
       {% endfor %}
       </tbody>
