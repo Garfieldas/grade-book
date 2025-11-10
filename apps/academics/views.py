@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from academics.models import Schedule, StudentClass
-from django.contrib.auth.decorators import login_required
 from academics.services.lessons import (
     get_student_class,
     DAYS_OF_WEEKS,
     get_student_lessons
 )
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def student_schedule(request):
@@ -15,4 +14,8 @@ def student_schedule(request):
     context = {
         "monday": monday
     }
-    return render(request, "academics/schedule/student_shedule.html", context)
+    return render(request, "academics/schedule/student_schedule.html", context)
+
+@login_required
+def teacher_schedule(request):
+    return render(request, "academics/schedule/teacher_schedule.html")
