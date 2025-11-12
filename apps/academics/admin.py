@@ -1,9 +1,13 @@
 from django.contrib import admin
 from commons.admin import BaseAdmin
-from academics.models import SchoolClass, Subject, AcademicYear, Semester, Schedule
+from academics.models import SchoolClass, StudentClass, Subject, AcademicYear, Semester, Schedule
 
 @admin.register(SchoolClass)
 class SchoolClassAdmin(BaseAdmin):
+    pass
+
+@admin.register(StudentClass)
+class StudentClassAdmin(BaseAdmin):
     pass
 
 @admin.register(Subject)

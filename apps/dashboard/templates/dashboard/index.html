@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div
+{% if user.is_authenticated and user.role == "STUDENT" %}
+  hx-get="{% url 'student_schedule' %}"
+{% elif user.role == "TEACHER" %}
+  hx-get="{% url 'teacher_schedule' %}"
+{% endif %}
+  hx-trigger="load"
+  hx-target="this"
+  hx-swap="innerHTML">
+  Loading dashboard...
+</div>
+{% endblock %}
+{% block navbar %}
+    {% if user.is_authenticated %}
+        {% if user.role == "TEACHER" %}
+            {% include 'dashboard/partials/teacher_navbar.html' %}
+        {% elif user.role == "STUDENT" %}
+            {% include 'dashboard/partials/student_navbar.html' %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
