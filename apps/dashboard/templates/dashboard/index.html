@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div
-{% if user.is_authenticated and user.role == "STUDENT" %}
-  hx-get="{% url 'student_schedule' %}"
-{% elif user.role == "TEACHER" %}
-  hx-get="{% url 'teacher_schedule' %}"
-{% endif %}
+  hx-get="{% url 'dashboard' %}"
   hx-trigger="load"
   hx-target="this"
   hx-swap="innerHTML">
