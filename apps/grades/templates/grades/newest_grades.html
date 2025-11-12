@@ -1,9 +1,10 @@
-  <main class="flex-1 min-w-0 p-5" id="userDashboard">
+<div id="userDashboard">
+  <main class="flex-1 min-w-0 p-5">
         <section id="teachers" class="mx-auto">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div class="flex items-center gap-2">
               <i data-lucide="users" class="w-5 h-5"></i>
-              <h2 class="text-base font-semibold">Mokytojai</h2>
+              <h2 class="text-base font-semibold">Pažymiai Naujiausi</h2>
               <span class="badge badge-sm">3</span>
             </div>
           </div>
@@ -20,16 +21,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for teacher in teachers_list %}
-                  <tr>
-                    <th>{{ forloop.counter }}</th>
-                    <td class="font-medium">{{ teacher.first_name}}</td>
-                    <td><a class="link">{{ teacher.last_name}}</a></td>
-                    <td><a class="link">{{ teacher.email}}</a></td>
-                  </tr>
-                  {% endfor %}
                 </tbody>
               </table>
             </div>
         </section>
       </main>
+    </div>
