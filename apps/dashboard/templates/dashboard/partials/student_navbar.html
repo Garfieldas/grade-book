@@ -15,7 +15,7 @@
        <nav class="menu px-3 py-3 gap-1">
         {% if user.is_authenticated %}
           <li>
-            <a href="./pages/students.html" class="active">
+            <a href="" class="active">
               <i data-lucide="users" class="w-4 h-4"></i>
               Naujiausi
             </a>
@@ -30,7 +30,10 @@
             </a>
           </li>
           <li>
-            <a href="#grades">
+            <a hx-get="{% url 'student_grades' %}"
+            hx-trigger="click"
+            hx-target="#teachersTable"
+            hx-swap="outerHTML">
               <i data-lucide="clipboard-list" class="w-4 h-4"></i>
               Pažymiai
             </a>
