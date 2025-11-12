@@ -21,7 +21,10 @@
             </a>
           </li>
           <li>
-            <a href="#teachers">
+            <a hx-get="{% url 'teachers_list' %}"
+            hx-trigger="click"
+            hx-target="#userDashboard"
+            hx-swap="outerHTML">
               <i data-lucide="school" class="w-4 h-4"></i>
               Mokytojai
             </a>
