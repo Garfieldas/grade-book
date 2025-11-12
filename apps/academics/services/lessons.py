@@ -1,5 +1,8 @@
 from academics.models import Schedule, StudentClass
 from users.models import User
+<<<<<<< HEAD
+from commons.models.days import DAYS_OF_WEEKS
+=======
 
 DAYS_OF_WEEKS = (
     ("PIR", "Pirmadienis"),
@@ -8,6 +11,7 @@ DAYS_OF_WEEKS = (
     ("KET", "Ketvirtadienis"),
     ("PEN", "Penktadienis"),
 )
+>>>>>>> development
 
 def get_student_class(user: User):
     student_class = StudentClass.objects.filter(student=user).first()

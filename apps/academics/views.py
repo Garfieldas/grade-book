@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 from django.shortcuts import render
 from academics.services.lessons import (
     get_student_class,
@@ -19,3 +21,4 @@ def student_schedule(request):
 @login_required
 def teacher_schedule(request):
     return render(request, "academics/schedule/teacher_schedule.html")
+>>>>>>> development

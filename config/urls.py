@@ -21,5 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('home/', include('dashboard.urls')),
+<<<<<<< HEAD
+=======
     path('schedule', include('academics.urls')),
+>>>>>>> development
 ]
