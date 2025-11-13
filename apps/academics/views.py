@@ -7,4 +7,8 @@ def teachers_table(request):
     user = request.user
     student_class = get_student_class(user)
     teachers_list = get_student_teachers(student_class)
-    return render(request, "academics/tables/teachers_table.html", {"teachers_list": teachers_list})
+    context = {
+        "teachers_list": teachers_list,
+        "student_class": student_class
+    }
+    return render(request, "academics/tables/teachers_table.html", context)
