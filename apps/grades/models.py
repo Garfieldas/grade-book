@@ -2,6 +2,7 @@ from django.db import models
 from users.models import User
 from academics.models import Subject, Semester
 from commons.models import UUIDMixin, TimeStampMixin, RoleChoices
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Mark(UUIDMixin, TimeStampMixin):
     student = models.ForeignKey(
@@ -16,7 +17,7 @@ class Mark(UUIDMixin, TimeStampMixin):
     semester = models.ForeignKey(
         Semester, on_delete=models.SET_NULL, null=True, related_name="marks"
     )
-    value = models.DecimalField(max_digits=4, decimal_places=2)
+    value = models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(2), MaxValueValidator(10)])
 
     class Meta:
         constraints = [
