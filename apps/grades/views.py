@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
+from users.models import User
+from academics.models import Semester, AcademicYear
+from apps.grades.forms import AddGrade
 
 @check_roles(RoleChoices.STUDENT)
 def student_grades(request):
@@ -9,3 +12,10 @@ def student_grades(request):
 @check_roles(RoleChoices.STUDENT)
 def newest_grades(request):
     return render(request, "grades/newest_grades.html")
+
+def add_student_grade(request):
+    teacher = request.user
+
+    form = AddGrade(teacher=teacher)
+
+    return render(request, "grades/add_student_grade_form.html", {"form": form})

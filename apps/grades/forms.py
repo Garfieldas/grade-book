@@ -1,0 +1,38 @@
+from django import forms
+from academics.services.lists import get_teacher_students
+from academics.models import Semester, Subject
+
+class AddGrade(forms.Form):
+    def __init__(self, *args, **kwargs):
+        teacher = kwargs.pop('teacher', None)
+        super().__init__(*args, **kwargs)
+        if teacher:
+            students = get_teacher_students(teacher)
+            subjects = Subject.objects.filter(teacher=teacher).all()
+            self.fields['student'].choices = [(user.id, f"{user.first_name} {user.last_name}") for user in students]
+            self.fields['subject'].choices = [(subject.id, f"{subject.name}") for subject in subjects]
+            semester = Semester.objects.filter(is_active=True).first()
+            self.fields['semester'].initial = semester.start_date
+            self.fields['semester'].widget.attrs['readonly'] = True
+        
+        
+    student = forms.ChoiceField(
+        label='Mokinys',
+        choices=[],
+        widget=forms.Select(attrs={'class': 'select select-bordered'})
+    )
+    subject = forms.ChoiceField(
+        label='Dalykas',
+        choices= [],
+        widget=forms.Select(attrs={'class': 'select select-bordered', })
+    )
+    semester = forms.DateField(
+        label="Semesteras",
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'input'})
+    )
+    value = forms.DecimalField(
+        label='Pažymys',
+        max_digits=4,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'class': 'input input-bordered', 'step': '0.01'})
+    )

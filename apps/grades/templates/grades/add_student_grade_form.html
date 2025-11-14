@@ -1,0 +1,39 @@
+ <dialog id="add-mark-modal" class="modal" open>
+    <div class="modal-box text-center">
+      <h3 class="font-semibold text-lg mb-4">Pridėti pažymį</h3>
+      <form id="add-mark-form" class="flex flex-col items-center">
+        {% csrf_token %}
+        <div class="form-control mb-4 w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ form.semester.label }}</span>
+          </label>
+          {{ form.semester }}
+        </div>
+        <div class="form-control mb-4 w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ form.student.label }}</span>
+          </label>
+          {{ form.student }}
+        </div>
+        <div class="form-control mb-4 w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ form.subject.label }}</span>
+          </label>
+          {{ form.subject }}
+        </div>
+        <div class="form-control mb-4 w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ form.value.label }}</span>
+          </label>
+         {{ form.value }}
+        </div>
+        <div class="modal-action">
+          <button type="button" id="close-mark-modal" class="btn btn-ghost">Atšaukti</button>
+          <button type="submit" class="btn btn-primary">Pridėti pažymį</button>
+        </div>
+      </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
