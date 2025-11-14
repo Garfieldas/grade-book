@@ -1,6 +1,6 @@
 from django import forms
 from academics.services.lists import get_teacher_students
-from academics.models import Semester, Subject
+from academics.models import Semester
 
 class AddGrade(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -8,9 +8,7 @@ class AddGrade(forms.Form):
         super().__init__(*args, **kwargs)
         if teacher:
             students = get_teacher_students(teacher)
-            subjects = Subject.objects.filter(teacher=teacher).all()
             self.fields['student'].choices = [(user.id, f"{user.first_name} {user.last_name}") for user in students]
-            self.fields['subject'].choices = [(subject.id, f"{subject.name}") for subject in subjects]
             semester = Semester.objects.filter(is_active=True).first()
             self.fields['semester'].initial = semester.start_date
             self.fields['semester'].widget.attrs['readonly'] = True

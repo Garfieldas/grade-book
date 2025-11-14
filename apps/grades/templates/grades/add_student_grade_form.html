@@ -13,13 +13,25 @@
           <label class="label">
             <span class="label-text">{{ form.student.label }}</span>
           </label>
-          {{ form.student }}
+          <select name="student" class="select select-bordered" id="id_student"
+            hx-get="{% url 'get_subjects_for_student' %}"
+            hx-trigger="change" 
+            hx-target="#id_subject" 
+            hx-swap="innerHTML" 
+            hx-vals='js:{student_id: event.target.value}'>
+            <option value="">Pasirinkite mokinį</option>
+            {% for choice_value, choice_label in form.student.field.choices %}
+            <option value="{{ choice_value }}">{{ choice_label }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="form-control mb-4 w-full max-w-xs">
           <label class="label">
             <span class="label-text">{{ form.subject.label }}</span>
           </label>
-          {{ form.subject }}
+          <select name="subject" class="select select-bordered" id="id_subject">
+            <option value="">Pasirinkite dalyką</option>
+          </select>
         </div>
         <div class="form-control mb-4 w-full max-w-xs">
           <label class="label">

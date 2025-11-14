@@ -1,8 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
-from users.models import User
-from academics.models import Semester, AcademicYear
 from apps.grades.forms import AddGrade
 
 @check_roles(RoleChoices.STUDENT)
