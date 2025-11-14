@@ -1,24 +1,24 @@
-<<<<<<< HEAD
-=======
 from django.shortcuts import render
-from academics.services.lessons import (
-    get_student_class,
-    DAYS_OF_WEEKS,
-    get_student_lessons
-)
-from django.contrib.auth.decorators import login_required
+from academics.services.lists import get_student_class, get_student_teachers, get_teacher_students
+from users.decorators import check_roles
+from commons.models.roles import RoleChoices
 
-@login_required
-def student_schedule(request):
+@check_roles(RoleChoices.STUDENT)
+def teachers_table(request):
     user = request.user
     student_class = get_student_class(user)
-    monday = get_student_lessons(student_class, DAYS_OF_WEEKS[0][0])
+    teachers_list = get_student_teachers(student_class)
     context = {
-        "monday": monday
+        "teachers_list": teachers_list,
+        "student_class": student_class
     }
-    return render(request, "academics/schedule/student_schedule.html", context)
+    return render(request, "academics/tables/teachers_table.html", context)
 
-@login_required
-def teacher_schedule(request):
-    return render(request, "academics/schedule/teacher_schedule.html")
->>>>>>> development
+@check_roles(RoleChoices.TEACHER)
+def students_table(request):
+    user = request.user
+    students_list = get_teacher_students(user)
+    context = {
+        "students_list": students_list
+    }
+    return render(request, "academics/tables/students_table.html", context)

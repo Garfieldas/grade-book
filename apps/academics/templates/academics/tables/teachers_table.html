@@ -1,0 +1,40 @@
+<main class="flex-1 min-w-0 p-5" id="userDashboard">
+  <section id="teachers" class="mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-2">
+        <i data-lucide="users" class="w-5 h-5"></i>
+        <h2 class="text-base font-semibold">Mokytojai - {{ student_class }} klasės</h2>
+        <span class="badge badge-sm">{{ teachers_list|length }}</span>
+      </div>
+    </div>
+    <div class="card bg-base-200 shadow-sm">
+      <div class="overflow-x-auto rounded-t-box">
+        <table class="table table-zebra w-full">
+          <thead class="bg-base-300 sticky top-0">
+            <tr>
+              <th class="w-12">#</th>
+              <th>Vardas</th>
+              <th>Pavardė</th>
+              <th>El.paštas</th>
+              <th>Dėstomas dalykas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in teachers_list %}
+            <tr>
+              <th>{{ forloop.counter }}</th>
+              <td class="font-medium">{{ item.teacher.first_name}}</td>
+              <td><a class="link">{{ item.teacher.last_name}}</a></td>
+              <td><a class="link">{{ item.teacher.email}}</a></td>
+              <td>
+                  {% for subject in item.subjects %}
+                  <span class="badge badge-outline">{{ subject.name }}</span>
+                  {% endfor %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  </section>
+</main>

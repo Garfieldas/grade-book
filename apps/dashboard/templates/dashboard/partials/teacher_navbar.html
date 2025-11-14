@@ -21,13 +21,13 @@
             </a>
           </li>
           <li>
-            <a href="#teachers">
+            <a 
+            hx-get="{%url 'students_list' %}"
+            hx-trigger="click"
+            hx-swap="outerHTML"
+            hx-target="#userDashboard">
               <i data-lucide="school" class="w-4 h-4"></i>
-<<<<<<< HEAD
               Mokiniai
-=======
-              Tvarkaraštis
->>>>>>> development
             </a>
           </li>
           <li>

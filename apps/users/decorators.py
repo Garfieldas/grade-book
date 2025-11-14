@@ -1,13 +1,14 @@
 from functools import wraps
-from django.http import HttpResponseRedirect
-from commons.models.roles import RoleChoices
+from django.http import HttpResponse
 
-def students_only(function):
-    @wraps(function)
-    def wrapper(request, *args, **kwargs):
-        user = request.user
-        if user.role == RoleChoices.STUDENT:
-            return function(request, *args, **kwargs)
-        else:
-            return HttpResponseRedirect('/')
-    return wrapper
+def check_roles(*roles):
+    def decorator(function):
+        @wraps(function)
+        def wrapper(request, *args, **kwargs):
+            user = request.user
+            if user.is_authenticated and any(user.role == role for role in roles):
+                return function(request, *args, **kwargs)
+            else:
+                return HttpResponse('Access denied', status=403)
+        return wrapper
+    return decorator

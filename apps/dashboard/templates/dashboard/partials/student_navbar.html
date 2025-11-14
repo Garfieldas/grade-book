@@ -15,19 +15,30 @@
        <nav class="menu px-3 py-3 gap-1">
         {% if user.is_authenticated %}
           <li>
-            <a href="./pages/students.html" class="active">
+            <a
+            hx-get="{% url 'newest_grades' %}"
+            hx-trigger="click"
+            hx-target="#userDashboard"
+            hx-swap="outerHTML"
+             class="active">
               <i data-lucide="users" class="w-4 h-4"></i>
               Naujiausi
             </a>
           </li>
           <li>
-            <a href="#teachers">
+            <a hx-get="{% url 'teachers_list' %}"
+            hx-trigger="click"
+            hx-target="#userDashboard"
+            hx-swap="outerHTML">
               <i data-lucide="school" class="w-4 h-4"></i>
-              Tvarkaraštis
+              Mokytojai
             </a>
           </li>
           <li>
-            <a href="#grades">
+            <a hx-get="{% url 'student_grades' %}"
+            hx-trigger="click"
+            hx-target="#userDashboard"
+            hx-swap="outerHTML">
               <i data-lucide="clipboard-list" class="w-4 h-4"></i>
               Pažymiai
             </a>
