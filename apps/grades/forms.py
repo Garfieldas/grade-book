@@ -12,10 +12,6 @@ class AddGrade(forms.Form):
             students = get_teacher_students(teacher)
             self.fields['student'].choices = [(user.id, f"{user.first_name} {user.last_name}") for user in students]
             semester = Semester.objects.filter(is_active=True).first()
-
-            self.fields['semester'].initial = f"{semester.name}"
-            self.fields['semester'].widget.attrs['readonly'] = True
-
             self.fields['date'].initial = timezone.now()
             self.fields['date'].widget.attrs['min'] = semester.start_date
             self.fields['date'].widget.attrs['max'] = semester.end_date
@@ -30,10 +26,6 @@ class AddGrade(forms.Form):
         label='Dalykas',
         choices= [],
         widget=forms.Select(attrs={'class': 'select select-bordered', })
-    )
-    semester = forms.DateField(
-        label="Semesteras",
-        widget=forms.TextInput(attrs={'type': 'text', 'class': 'input'})
     )
     date = forms.DateField(
         label="Semesteras",

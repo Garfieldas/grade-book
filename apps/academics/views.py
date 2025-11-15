@@ -25,7 +25,6 @@ def students_table(request):
     }
     return render(request, "academics/tables/students_table.html", context)
 
-@check_roles(RoleChoices.TEACHER)
 def get_subjects_for_student(request):
     student_id = request.GET.get('student_id')
     teacher = request.user

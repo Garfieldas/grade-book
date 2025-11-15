@@ -7,7 +7,7 @@ class UserAdmin(BaseAdmin):
     fieldsets = (
         ("Personal info", {"fields": ("first_name", "last_name", "email")}),
         ("Password", {"fields": ("password",)}),
-        ("Status", {"fields": ("role", "is_active", "is_staff",)}),
+        ("Status", {"fields": ("role", "is_active", "is_staff", "is_superuser")}),
         ("Additional Info", {"fields": ("date_joined", "last_login",)}),
     )
 
