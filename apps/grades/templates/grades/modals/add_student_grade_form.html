@@ -1,0 +1,44 @@
+<main class="flex-1 min-w-0 p-5" id="userDashboard">
+  <div class="flex items-center justify-center py-12">
+    <div class="w-full max-w-md">
+      <form id="add-mark-form" method="POST" hx-post="{% url 'add_mark' %}" hx-trigger="submit" hx-swap="outerHTML" hx-target="#userDashboard">
+        {% csrf_token %}
+        <div class="bg-base-100 border border-base-300 rounded-2xl p-8 shadow-lg">
+          <h2 class="text-3xl font-bold text-center mb-8">Pridėti pažymį</h2>
+
+          <div class="space-y-6">
+            <div>
+              <label for="id_semester" class="block text-sm font-medium text-base-content/80 mb-2">{{ form.semester.label }}</label>
+              {{ form.semester }}
+            </div>
+
+            <div>
+              <label for="id_student" class="block text-sm font-medium text-base-content/80 mb-2">{{ form.student.label }}</label>
+              {{ form.student }}
+            </div>
+
+            <div>
+              <label for="id_subject" class="block text-sm font-medium text-base-content/80 mb-2">{{ form.subject.label }}</label>
+              {{ form.subject }}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="id_date" class="block text-sm font-medium text-base-content/80 mb-2">{{ form.date.label }}</label>
+                {{ form.date }}
+              </div>
+              <div>
+                <label for="id_value" class="block text-sm font-medium text-base-content/80 mb-2">{{ form.value.label }}</label>
+                {{ form.value }}
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-neutral w-full py-3 mt-8 text-lg">Pridėti pažymį</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="messages">
+    {% include 'grades/notifications/alert.html' %}
+  </div>
+</main>
