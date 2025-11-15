@@ -42,3 +42,13 @@ def get_teacher_students(teacher: User):
     )
     
     return students
+
+def get_subjects_for_student(student, teacher):
+    student_class = get_student_class(student)
+    
+    subjects = Subject.objects.filter(
+        teacher=teacher,
+        lessons__school_class=student_class
+    ).distinct()
+    
+    return subjects

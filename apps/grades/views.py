@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.utils import timezone
 from grades.models import Mark
-from django.contrib import messages
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
 from apps.grades.forms import AddGrade
-from academics.models import Semester
+from academics.models import Semester, Subject
+from users.models import User
 
 @check_roles(RoleChoices.STUDENT)
 def student_grades(request):
@@ -20,15 +20,15 @@ def add_student_grade(request):
     teacher = request.user
     if request.method == "POST":
         form = AddGrade(request.POST, teacher=teacher)
-        subject = request.POST.get('subject')
-        print(subject)
         if form.is_valid():
-            student = form.cleaned_data["student"]
-            subject = form.cleaned_data["subject"]
+            student_id = form.cleaned_data["student"]
             date = form.cleaned_data["date"] or timezone.now()
             mark = form.cleaned_data["value"]
-            semester = form.cleaned_data["semester"]
+            subject_id = form.cleaned_data["subject"]
+
             semester = Semester.objects.filter(is_active=True).first()
+            student = User.objects.get(pk=student_id)
+            subject = Subject.objects.get(pk=subject_id)
             grade = Mark.objects.create(
                 student=student,
                 subject=subject,
@@ -36,9 +36,10 @@ def add_student_grade(request):
                 mark_date=date,
                 value=mark)
             grade.save()
-            print('nice')
+            print('Works')
         else:
             print(form.errors)
     else:
         form = AddGrade(teacher=teacher)
+        print(form.errors)
     return render(request, "grades/add_student_grade_form.html", {"form": form})
