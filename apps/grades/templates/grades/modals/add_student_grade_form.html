@@ -1,7 +1,6 @@
- <dialog id="add-mark-modal" class="modal" open>
-    <div class="modal-box text-center">
+<main class="flex-1 min-w-0 p-5" id="userDashboard">
       <h3 class="font-semibold text-lg mb-4">Pridėti pažymį</h3>
-      <form id="add-mark-form" class="flex flex-col items-center" hx-post="{% url 'add_mark' %}" hx-trigger="click" hx-swap="outerHTML" hx-target="#add-mark-modal">
+      <form id="add-mark-form" class="flex flex-col items-center" hx-post="{% url 'add_mark' %}" hx-trigger="click" hx-swap="outerHTML" hx-target="this">
         {% csrf_token %}
         <div class="form-control mb-4 w-full max-w-xs">
           <label class="label">
@@ -45,10 +44,10 @@
           </label>
          {{ form.value }}
         </div>
-        <button class="btn btn-primary">Pridėti pažymį</button>
+        <button type="button" class="btn btn-primary">Pridėti pažymį</button>
       </form>
     </div>
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
-    </form>
-  </dialog>
+  <div id="messages">
+
+  </div>
+</main>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
+from django.contrib import messages
 from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
@@ -36,10 +37,12 @@ def add_student_grade(request):
                 mark_date=date,
                 value=mark)
             grade.save()
-            print('Works')
+            messages.success(request, 'Pažymis įrašytas sėkmingai!')
+            return render(request, "grades/notifications/alert.html")
         else:
-            print(form.errors)
+            messages.error(request, f"{form.errors}")
+            return render(request, "grades/notifications/alert.html")
     else:
         form = AddGrade(teacher=teacher)
         print(form.errors)
-    return render(request, "grades/add_student_grade_form.html", {"form": form})
+    return render(request, "grades/modals/add_student_grade_form.html", {"form": form})
