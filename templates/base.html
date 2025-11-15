@@ -41,6 +41,19 @@
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
     });
+  htmx.onLoad(function(target) {
+    const handleAlert = (alert) => {
+        setTimeout(() => {
+            alert.classList.add("opacity-0", "transition", "duration-700");
+            setTimeout(() => alert.remove(), 700);
+        }, 3000);
+    };
+    if (target.classList.contains("autoremove")) {
+        handleAlert(target);
+    }
+    const alerts = target.querySelectorAll(".autoremove");
+    alerts.forEach(handleAlert);
+});
   </script>
 </body>
 </html>

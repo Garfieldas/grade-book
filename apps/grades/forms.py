@@ -1,37 +1,84 @@
 from django import forms
 from academics.services.lists import get_teacher_students, get_subjects_for_student
-from academics.models import Semester
+from academics.models import Semester, Subject
+from grades.models import Mark
 from django.utils import timezone
+from users.models import User
+from django.urls import reverse
+
+class SubjectChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.name
 
 class AddGrade(forms.Form):
     def __init__(self, *args, **kwargs):
         teacher = kwargs.pop('teacher', None)
         super().__init__(*args, **kwargs)
         if teacher:
-            students = get_teacher_students(teacher)
-            self.fields['student'].choices = [(user.id, f"{user.first_name} {user.last_name}") for user in students]
+            self.fields['student'].queryset = get_teacher_students(teacher)
+            self.fields['student'].widget.attrs.update({
+            "hx-get": reverse("get_subjects_for_student"),
+            "hx-trigger": "change",
+            "hx-target": "#id_subject",
+            "hx-swap": "innerHTML",
+            "hx-vals": "js:{student_id: event.target.value}",
+            })
             semester = Semester.objects.filter(is_active=True).first()
             self.fields['date'].initial = timezone.now()
             self.fields['date'].widget.attrs['min'] = semester.start_date
             self.fields['date'].widget.attrs['max'] = semester.end_date
         
-        student_id = self.data.get('student')
-        if student_id:
-            subjects = get_subjects_for_student(student_id, teacher)
-            self.fields['subject'].choices = [(subject.id, f"{subject.name}") for subject in subjects]
+        student = self.data.get('student')
+        if student:
+            self.fields['subject'].queryset = get_subjects_for_student(student, teacher)
+
+    def clean(self):
+        cleaned = super().clean()
+
+        student = cleaned.get("student")
+        subject = cleaned.get("subject")
+        date    = cleaned.get("date")
+        value   = cleaned.get("value")
+
+        semester = Semester.objects.filter(is_active=True).first()
+
+        if value is not None and not (2 <= value <= 10):
+            self.add_error("value", "Pažymys turi būti tarp 2 ir 10.")
+
+        if student is None:
+            self.add_error("student", "Pasirinkite mokinį.")
+
+        if subject is None:
+            self.add_error("subject", "Pasirinkite dalyką.")
+
+        if date is None:
+            self.add_error("date", "Data privaloma.")
+        elif semester and not (semester.start_date <= date <= semester.end_date):
+            self.add_error("date", f"Data turi būti tarp {semester.start_date} ir {semester.end_date}.")
+
+        if student and subject and date and semester:
+            if Mark.objects.filter(
+            student=student,
+            subject=subject,
+            mark_date=date,
+            semester=semester
+            ).exists():
+                self.add_error("date", "Mokinys jau turi pažymį šiai datai.")
+
+        return cleaned
         
-    student = forms.ChoiceField(
+    student = forms.ModelChoiceField(
         label='Mokinys',
-        choices=[],
-        widget=forms.Select(attrs={'class': 'select select-bordered'})
+        queryset=User.objects.none(),
+        widget=forms.Select(attrs={'class': 'select select-bordered w-full'})
     )
-    subject = forms.ChoiceField(
+    subject = SubjectChoiceField(
         label='Dalykas',
-        choices= [],
-        widget=forms.Select(attrs={'class': 'select select-bordered', })
+        queryset=Subject.objects.none(),
+        widget=forms.Select(attrs={'class': 'select select-bordered w-full', })
     )
     date = forms.DateField(
-        label="Semesteras",
+        label="Data",
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'input'})
     )
     value = forms.DecimalField(
