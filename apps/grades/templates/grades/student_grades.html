@@ -13,19 +13,21 @@
           <thead class="bg-base-300 sticky top-0">
             <tr>
               <th class="w-12">#</th>
-              <th>Pamoka</th>
-              <th>Pažymis</th>
               <th>Data</th>
+              <th>Pažymis</th>
+              <th>Pamoka</th>
+              <th>Mokytojas</th>
             </tr>
           </thead>
           <tbody>
+            {% for grade in grades %}
             <tr>
-              <th>1</th>
-              <td class="font-medium">matke</td>
-              <td><a class="link">2</a></td>
-              <td><a class="link">20224</a></td>
+              <th>{{ forloop.counter }}</th>
+              <td class="font-medium">{{ grade.mark_date}}</td>
+              <td><a class="link">{{ grade.value }}</a></td>
+              <td><a class="link">{{ grade.subject.name }}</a></td>
                <td>
-                  <span class="badge badge-outline"></span>
+                  <span class="badge badge-outline">{{ grade.subject.teacher }}</span>
               </td>
             </tr>
             {% endfor %}
