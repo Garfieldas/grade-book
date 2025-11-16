@@ -1,17 +1,24 @@
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.contrib import messages
 from django.http import HttpResponse
 from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
-from apps.grades.forms import AddGrade, GradeModal
+from grades.forms import AddGrade, GradeModal
+from grades.services.grades import get_student_grades
 from academics.models import Semester
 from users.models import User
 
 @check_roles(RoleChoices.STUDENT)
 def student_grades(request):
-    return render(request, "grades/student_grades.html")
+    student = request.user
+    grades = get_student_grades(student)
+    context = {
+        "grades": grades
+    }
+    return render(request, "grades/student_grades.html", context)
 
 @check_roles(RoleChoices.STUDENT)
 def newest_grades(request):
@@ -53,8 +60,6 @@ def add_student_grade(request):
     form = AddGrade(teacher=teacher)
     return render(request, "grades/modals/add_student_grade_form.html", {"form": form})
 
-
-from django.template.loader import render_to_string
 @check_roles(RoleChoices.TEACHER)
 def add_student_grade_by_id(request, student_id):
     teacher = request.user
