@@ -1,6 +1,4 @@
 from grades.models import Mark
-from users.models import User
-from academics.models import Subject
 from django.utils import timezone
 
 def get_student_grades(student):
