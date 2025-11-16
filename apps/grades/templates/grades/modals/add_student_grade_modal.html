@@ -1,0 +1,88 @@
+<div id="modal-container">
+  <input
+    type="checkbox"
+    id="add-grade-modal-toggle"
+    class="modal-toggle"
+    checked
+  />
+  <div id="add-grade-modal" class="modal modal-open" role="dialog">
+    <div class="modal-box relative">
+      <form method="dialog">
+        <label
+          for="add-grade-modal-toggle"
+          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          onclick="document.getElementById('add-grade-modal').remove()"
+          >✕</label
+        >
+      </form>
+
+      <h3 class="font-bold text-lg text-center mb-4">Pridėti pažymį</h3>
+
+     {% if messages %}
+        <div class="mb-4">
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div role="alert" class="alert alert-error mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ message }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form
+        id="add-mark-form"
+        method="POST"
+        hx-post="{% url 'add_mark_by_id' student_id %}"
+        hx-target="#modal-container"
+        hx-swap="innerHTML"
+      >
+        {% csrf_token %}
+        <div class="space-y-4">
+          <div>
+            <label
+              for="id_subject"
+              class="block text-sm font-medium text-base-content/80 mb-2"
+              >{{ form.subject.label }}</label
+            >
+            {{ form.subject }}
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="id_date"
+                class="block text-sm font-medium text-base-content/80 mb-2"
+                >{{ form.date.label }}</label
+              >
+              {{ form.date }}
+            </div>
+            <div>
+              <label
+                for="id_value"
+                class="block text-sm font-medium text-base-content/80 mb-2"
+                >{{ form.value.label }}</label
+              >
+              {{ form.value }}
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-action">
+          <button type="submit" class="btn btn-neutral w-full">
+            Pridėti
+          </button>
+        </div>
+      </form>
+    </div>
+    <label
+      class="modal-backdrop"
+      for="add-grade-modal-toggle"
+      onclick="document.getElementById('add-grade-modal').remove()"
+      >Close</label
+    >
+  </div>
+</div>

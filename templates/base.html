@@ -41,6 +41,9 @@
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
     });
+  document.body.addEventListener("htmx:afterSwap", () => {
+      lucide.createIcons();
+    });
   htmx.onLoad(function(target) {
     const handleAlert = (alert) => {
         setTimeout(() => {
