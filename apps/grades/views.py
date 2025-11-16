@@ -7,7 +7,7 @@ from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
 from grades.forms import AddGrade, GradeModal
-from grades.services.grades import get_student_grades
+from grades.services.grades import get_student_grades, get_recent_grades
 from academics.models import Semester
 from users.models import User
 
@@ -22,7 +22,12 @@ def student_grades(request):
 
 @check_roles(RoleChoices.STUDENT)
 def newest_grades(request):
-    return render(request, "grades/newest_grades.html")
+    student = request.user
+    grades = get_recent_grades(student)
+    context = {
+        "grades": grades
+    }
+    return render(request, "grades/newest_grades.html", context)
 
 @check_roles(RoleChoices.TEACHER)
 def add_student_grade(request):
