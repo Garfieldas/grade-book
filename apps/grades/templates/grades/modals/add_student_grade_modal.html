@@ -17,6 +17,7 @@
       </form>
 
       <h3 class="font-bold text-lg text-center mb-4">Pridėti pažymį</h3>
+      <h4 class="font-bold text-sm text-center mb-4">Mokinys: {{ student.first_name}} {{ student.last_name }}</h3>
 
      {% if messages %}
         <div class="mb-4">
@@ -36,7 +37,7 @@
       <form
         id="add-mark-form"
         method="POST"
-        hx-post="{% url 'add_mark_by_id' student_id %}"
+        hx-post="{% url 'add_mark_by_id' student.id %}"
         hx-target="#modal-container"
         hx-swap="innerHTML"
       >
