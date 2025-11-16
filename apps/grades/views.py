@@ -6,6 +6,7 @@ from users.decorators import check_roles
 from commons.models.roles import RoleChoices
 from apps.grades.forms import AddGrade, GradeModal
 from academics.models import Semester
+from users.models import User
 
 @check_roles(RoleChoices.STUDENT)
 def student_grades(request):
@@ -59,12 +60,12 @@ def add_student_grade_by_id(request, student_id):
     if request.method == "POST":
         form = GradeModal(request.POST, teacher=teacher, student_id=student_id)
         if form.is_valid():
-            student = form.cleaned_data["student"]
             subject = form.cleaned_data["subject"]
             date = form.cleaned_data["date"] or timezone.now()
             value = form.cleaned_data["value"]
 
             semester = Semester.objects.filter(is_active=True).first()
+            student = User.objects.get(pk=student_id)
 
             Mark.objects.create(
                 student=student,
@@ -74,16 +75,15 @@ def add_student_grade_by_id(request, student_id):
                 value=value
             )
             messages.success(request, "Pažymis įrašytas sėkmingai!")
-            new_form = GradeModal(teacher=teacher, student_id=student_id)
             return render(
                 request,
                 "grades/modals/add_student_grade_modal.html",
-                {"form": new_form})
+                {})
         else:
             for keys in form.errors.values():
                 for error in keys:
                     messages.error(request, error)
-            return render(request, "grades/modals/add_student_grade_modal.html", {"form": form})
+            return render(request, "grades/modals/add_student_grade_modal.html", {"form": form, "student_id": student_id})
         
-    form = GradeModal(teacher=teacher)
-    return render(request, "grades/modals/add_student_grade_modal.html", {"form": form})
+    form = GradeModal(teacher=teacher, student_id=student_id)
+    return render(request, "grades/modals/add_student_grade_modal.html", {"form": form, "student_id": student_id})

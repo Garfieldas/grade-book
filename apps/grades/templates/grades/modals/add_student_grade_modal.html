@@ -1,9 +1,73 @@
-<label for="my_modal_7" class="btn">open modal</label>
-<input type="checkbox" id="my_modal_7" class="modal-toggle" />
-<div class="modal" role="dialog">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Hello!</h3>
-    <p class="py-4">This modal works with a hidden checkbox!</p>
+<div id="modal-container">
+  <input
+    type="checkbox"
+    id="add-grade-modal-toggle"
+    class="modal-toggle"
+    checked
+  />
+  <div id="add-grade-modal" class="modal modal-open" role="dialog">
+    <div class="modal-box relative">
+      <form method="dialog">
+        <label
+          for="add-grade-modal-toggle"
+          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          onclick="document.getElementById('add-grade-modal').remove()"
+          >✕</label
+        >
+      </form>
+
+      <h3 class="font-bold text-lg text-center mb-4">Pridėti pažymį</h3>
+
+      <form
+        id="add-mark-form"
+        method="POST"
+        hx-post="{% url 'add_mark_by_id' student_id %}"
+        hx-target="#modal-container"
+        hx-swap="innerHTML"
+      >
+        {% csrf_token %}
+        <div class="space-y-4">
+          <div>
+            <label
+              for="id_subject"
+              class="block text-sm font-medium text-base-content/80 mb-2"
+              >{{ form.subject.label }}</label
+            >
+            {{ form.subject }}
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="id_date"
+                class="block text-sm font-medium text-base-content/80 mb-2"
+                >{{ form.date.label }}</label
+              >
+              {{ form.date }}
+            </div>
+            <div>
+              <label
+                for="id_value"
+                class="block text-sm font-medium text-base-content/80 mb-2"
+                >{{ form.value.label }}</label
+              >
+              {{ form.value }}
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-action">
+          <button type="submit" class="btn btn-neutral w-full">
+            Pridėti
+          </button>
+        </div>
+      </form>
+    </div>
+    <label
+      class="modal-backdrop"
+      for="add-grade-modal-toggle"
+      onclick="document.getElementById('add-grade-modal').remove()"
+      >Close</label
+    >
   </div>
-  <label class="modal-backdrop" for="my_modal_7">Close</label>
 </div>
