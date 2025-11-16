@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.http import HttpResponse
@@ -58,7 +58,7 @@ from django.template.loader import render_to_string
 @check_roles(RoleChoices.TEACHER)
 def add_student_grade_by_id(request, student_id):
     teacher = request.user
-
+    student = get_object_or_404(User, pk=student_id)
     if request.method == "POST":
         form = GradeModal(request.POST, teacher=teacher, student_id=student_id)
         if form.is_valid():
@@ -67,7 +67,6 @@ def add_student_grade_by_id(request, student_id):
             value = form.cleaned_data["value"]
 
             semester = Semester.objects.filter(is_active=True).first()
-            student = User.objects.get(pk=student_id)
 
             Mark.objects.create(
                 student=student,
@@ -86,8 +85,8 @@ def add_student_grade_by_id(request, student_id):
             return render(
                 request, 
                 "grades/modals/add_student_grade_modal.html", 
-                {"form": form, "student_id": student_id}
+                {"form": form, "student": student}
             )
         
     form = GradeModal(teacher=teacher, student_id=student_id)
-    return render(request, "grades/modals/add_student_grade_modal.html", {"form": form, "student_id": student_id})
+    return render(request, "grades/modals/add_student_grade_modal.html", {"form": form, "student": student})
