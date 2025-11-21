@@ -1,0 +1,32 @@
+<main class="flex-1 min-w-0 p-5" id="userDashboard">
+  <section id="classes" class="mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-2">
+        <i data-lucide="school" class="w-5 h-5"></i>
+        <h2 class="text-base font-semibold">Mano klasės</h2>
+        <span class="badge badge-sm">{{ teacher_classes|length }}</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for item in teacher_classes %}
+      <div class="card bg-base-200 shadow-sm hover:shadow-md transition">
+        <div class="card-body"
+        hx-get="{% url 'students_list' item.id %}"
+        hx-trigger="click"
+        hx-swap="outerHTML"
+        hx-target="#userDashboard">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-2xl font-bold">{{ forloop.counter }}</h3>
+            <h3 class="text-2xl font-bold">{{ item }}</h3>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full">
+        <p class="text-center opacity-50 py-8">Nėra priskirtų klasių</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</main>

@@ -1,5 +1,11 @@
 from django.shortcuts import render
-from academics.services.lists import get_student_class, get_student_teachers, get_teacher_students
+from academics.services.lists import (
+    get_student_class,
+    get_student_teachers,
+    get_teacher_students,
+    get_teacher_classes,
+    get_class_students
+)
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
 from academics.models import Subject
@@ -17,9 +23,8 @@ def teachers_table(request):
     return render(request, "academics/tables/teachers_table.html", context)
 
 @check_roles(RoleChoices.TEACHER)
-def students_table(request):
-    user = request.user
-    students_list = get_teacher_students(user)
+def students_table(request, class_id):
+    students_list = get_class_students(class_id)
     context = {
         "students_list": students_list
     }
@@ -43,3 +48,11 @@ def get_subjects_for_student(request):
         options += f'<option value="{subj.id}">{subj.name}</option>'
     
     return HttpResponse(options)
+
+def teacher_classes(request):
+    teacher = request.user
+    teacher_classes = get_teacher_classes(teacher)
+    context = {
+        "teacher_classes": teacher_classes
+    }
+    return render(request, "academics/tables/teachers_classes_table.html", context)
