@@ -2,7 +2,7 @@
 <section id="latest-marks" class="mx-auto">
   <div class="flex items-center gap-2 mb-4">
     <i data-lucide="check-circle" class="w-5 h-5"></i>
-    <h2 class="text-base font-semibold">Naujausi pažymiai</h2>
+    <h2 class="text-base font-semibold">Šiandienos pažymiai</h2>
     <span class="badge badge-sm">{{ grades|length }}</span>
   </div>
 
@@ -27,7 +27,7 @@
       </div>
     </div>
     {% empty %}
-      <p class="opacity-50">Nėra pažymių.</p>
+      <p class="opacity-50">Šiandien negavote jokių pažymių</p>
     {% endfor %}
   </div>
 </section>
