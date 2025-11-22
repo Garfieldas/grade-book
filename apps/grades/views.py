@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
-from grades.forms import AddGrade, GradeModal
+from grades.forms import AddGrade, GradeModal, EditGrade
 from grades.services.grades import get_student_grades, get_recent_grades, get_teacher_student_grades
 from academics.models import Semester
 from users.models import User
@@ -112,3 +112,25 @@ def show_student_marks(request, student_id):
         "student": student
     }
     return render(request, "grades/teacher_grades.html", context)
+
+
+@check_roles(RoleChoices.TEACHER)
+def edit_mark(request, mark_id):
+    mark = get_object_or_404(Mark, pk=mark_id)
+    
+    if request.method == "POST":
+        form = EditGrade(request.POST, instance=mark)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pažymis atnaujintas.")
+            notifications_html = render_to_string('grades/notifications/alert.html', request=request)
+            return HttpResponse(f'<div id="modal-container"></div>{notifications_html}')
+        else:
+            for keys in form.errors.values():
+                for error in keys:
+                    messages.error(request, error)
+            return render(request, "grades/modals/edit_student_grade_modal.html", {"form": form, "mark": mark})
+    else:
+        form = EditGrade(instance=mark)
+    
+    return render(request, "grades/modals/edit_student_grade_modal.html", {"form": form, "mark": mark})

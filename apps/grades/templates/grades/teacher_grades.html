@@ -6,7 +6,7 @@
   <section class="mx-auto">
     <div class="flex items-center gap-2 mb-4">
       <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-      <h2 class="text-base font-semibold">Pažymiai – {{ student }}</h2>
+      <h2 class="text-base font-semibold">Pažymiai – {{ student.first_name }} {{ student.last_name }}</h2>
       <span class="badge badge-sm">{{ marks|length }}</span>
     </div>
 
@@ -21,40 +21,38 @@
               <th>Veiksmai</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="marks-table-body">
             {% for mark in marks %}
-            <tr>
-              <th>{{ forloop.counter }}</th>
-              <td>{{ mark.mark_date|date:"Y-m-d" }}</td>
-              <td><span class="badge badge-outline">{{ mark.value }}</span></td>
-              <td>
-                <div class="flex gap-2">
-                  <button class="btn btn-warning btn-xs"
-                    hx-trigger="click"
-                    hx-target="#modal-container"
-                    hx-swap="innerHTML">
-                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                  </button>
-                  <button class="btn btn-error btn-xs"
-                    hx-trigger="click"
-                    hx-target="#userDashboard"
-                    hx-swap="outerHTML"
-                    hx-confirm="Ar tikrai norite ištrinti šį pažymį?">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
+              <tr id="mark-{{ mark.id }}">
+                <th>{{ forloop.counter }}</th>
+                <td>{{ mark.mark_date|date:"Y-m-d" }}</td>
+                <td><span class="badge badge-outline">{{ mark.value }}</span></td>
+                <td>
+                  <div class="flex gap-2">
+                    <button class="btn btn-warning btn-xs"
+                      hx-get="{% url 'edit_mark' mark.id %}"
+                      hx-target="#modal-container"
+                      hx-swap="innerHTML">
+                      <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
             {% empty %}
-            <tr>
-              <td colspan="4" class="text-center opacity-50 py-6">
-                Nėra pažymių šiam mokiniui.
-              </td>
-            </tr>
+              <tr>
+                <td colspan="4" class="text-center opacity-50 py-6">Nėra pažymių.</td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </section>
+  <div id="modal-container"></div>
 </main>
+<script>
+document.body.addEventListener('closeEditModal', () => {
+  const m = document.getElementById('edit-grade-modal');
+  if (m) m.remove();
+});
+</script>

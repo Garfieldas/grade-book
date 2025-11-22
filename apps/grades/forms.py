@@ -156,3 +156,51 @@ class GradeModal(forms.ModelForm):
                 self.add_error("date", "Mokinys jau turi pažymį šiai datai.")
 
         return cleaned
+
+class EditGrade(forms.ModelForm):
+    mark_date = forms.DateField(
+        label="Data",
+        widget=forms.DateInput(attrs={"type": "date", "class": "input input-bordered w-full"})
+    )
+    value = forms.DecimalField(
+        label="Pažymys",
+        max_digits=3,
+        decimal_places=1,
+        widget=forms.NumberInput(attrs={"class": "input input-bordered w-full"})
+    )
+
+    class Meta:
+        model = Mark
+        fields = ["mark_date", "value"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        semester = Semester.objects.filter(is_active=True).first()
+        today = timezone.now().date()
+        if semester:
+            self.fields["mark_date"].widget.attrs["min"] = str(semester.start_date)
+        self.fields["mark_date"].widget.attrs["max"] = str(today)
+
+    def clean(self):
+        cleaned = super().clean()
+        value = cleaned.get("value")
+        mark_date = cleaned.get("mark_date")
+        today = timezone.now().date()
+        semester = Semester.objects.filter(is_active=True).first()
+
+        if value is not None and not (2 <= value <= 10):
+            self.add_error("value", "Pažymys turi būti tarp 2 ir 10.")
+
+        if mark_date and semester and not (semester.start_date <= mark_date <= today):
+            self.add_error("mark_date", f"Data turi būti tarp {semester.start_date} ir {today}.")
+
+        if self.instance.pk and mark_date:
+            exists = Mark.objects.filter(
+                student=self.instance.student,
+                subject=self.instance.subject,
+                semester=self.instance.semester,
+                mark_date=mark_date
+            ).exclude(pk=self.instance.pk).exists()
+            if exists:
+                self.add_error("mark_date", "Šiai datai jau yra pažymys.")
+        return cleaned

@@ -1,0 +1,15 @@
+<tr id="mark-{{ mark.id }}">
+  <th>{{ forloop.counter|default:"" }}</th>
+  <td>{{ mark.mark_date|date:"Y-m-d" }}</td>
+  <td><span class="badge badge-outline">{{ mark.value }}</span></td>
+  <td>
+    <div class="flex gap-2">
+      <button class="btn btn-warning btn-xs"
+        hx-get="{% url 'edit_mark' mark.id %}"
+        hx-target="#modal-container"
+        hx-swap="innerHTML">
+        <i data-lucide="pencil" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </td>
+</tr>
