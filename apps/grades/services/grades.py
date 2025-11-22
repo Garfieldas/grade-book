@@ -8,6 +8,14 @@ def get_student_grades(student):
 
     return grades
 
+def get_teacher_student_grades(student, teacher):
+    grades = Mark.objects.filter(
+        student=student,
+        subject__teacher=teacher
+    ).order_by('mark_date')
+
+    return grades
+
 def get_recent_grades(student):
     today = timezone.now().date()
     grades = Mark.objects.filter(

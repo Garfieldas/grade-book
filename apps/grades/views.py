@@ -7,7 +7,7 @@ from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
 from grades.forms import AddGrade, GradeModal
-from grades.services.grades import get_student_grades, get_recent_grades
+from grades.services.grades import get_student_grades, get_recent_grades, get_teacher_student_grades
 from academics.models import Semester
 from users.models import User
 
@@ -100,3 +100,15 @@ def add_student_grade_by_id(request, student_id):
         
     form = GradeModal(teacher=teacher, student_id=student_id)
     return render(request, "grades/modals/add_student_grade_modal.html", {"form": form, "student": student})
+
+
+@check_roles(RoleChoices.TEACHER)
+def show_student_marks(request, student_id):
+    teacher = request.user
+    student = get_object_or_404(User, pk=student_id)
+    grades = get_teacher_student_grades(student, teacher)
+    context = {
+        "marks": grades,
+        "student": student
+    }
+    return render(request, "grades/teacher_grades.html", context)
