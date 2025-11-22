@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.contrib import messages
 from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 from grades.models import Mark
 from users.decorators import check_roles
 from commons.models.roles import RoleChoices
@@ -134,3 +135,10 @@ def edit_mark(request, mark_id):
         form = EditGrade(instance=mark)
     
     return render(request, "grades/modals/edit_student_grade_modal.html", {"form": form, "mark": mark})
+
+@check_roles(RoleChoices.TEACHER)
+@require_http_methods(["DELETE", "POST"])
+def delete_mark(request, mark_id):
+    mark = get_object_or_404(Mark, pk=mark_id)
+    mark.delete()
+    return HttpResponse('', status=200)

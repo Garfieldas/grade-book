@@ -1,4 +1,8 @@
 <main class="flex-1 min-w-0 p-5" id="userDashboard">
+  <form id="csrf-source" style="display:none;">
+    {% csrf_token %}
+  </form>
+
   <div id="messages" class="mb-4">
     {% include 'grades/notifications/alert.html' %}
   </div>
@@ -35,6 +39,14 @@
                       hx-swap="innerHTML">
                       <i data-lucide="pencil" class="w-4 h-4"></i>
                     </button>
+                    <button class="btn btn-error btn-xs"
+                      hx-delete="{% url 'delete_mark' mark.id %}"
+                      hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                      hx-target="closest tr"
+                      hx-swap="delete"
+                      hx-confirm="Ar tikrai ištrinti pažymį?">
+                      <i data-lucide="trash" class="w-4 h-4"></i>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -54,5 +66,11 @@
 document.body.addEventListener('closeEditModal', () => {
   const m = document.getElementById('edit-grade-modal');
   if (m) m.remove();
+});
+document.body.addEventListener('htmx:configRequest', (evt) => {
+  const tokenInput = document.querySelector('#csrf-source input[name=csrfmiddlewaretoken]');
+  if (tokenInput) {
+    evt.detail.headers['X-CSRFToken'] = tokenInput.value;
+  }
 });
 </script>
