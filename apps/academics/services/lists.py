@@ -22,14 +22,17 @@ def get_student_teachers(school_class):
     })
     return teachers_list
 
+def get_teacher_classes(teacher):
+    teacher_classes = (
+    SchoolClass.objects
+    .filter(schedule__subject__teacher=teacher)
+    .distinct()
+    )
+    return teacher_classes
+
 def get_teacher_students(teacher: User):   
      
-    taught_classes = (
-        Schedule.objects
-        .filter(subject__teacher=teacher)
-        .values_list('school_class', flat=True)
-        .distinct()
-    )
+    taught_classes = get_teacher_classes(teacher)
     
     students = (
         User.objects
@@ -52,3 +55,14 @@ def get_subjects_for_student(student, teacher):
     ).distinct()
     
     return subjects
+
+def get_class_students(class_id):
+    return (
+        User.objects
+        .filter(
+            role=RoleChoices.STUDENT,
+            student_class__school_class__id=class_id
+        )
+        .select_related('student_class', 'student_class__school_class')
+        .distinct()
+    )

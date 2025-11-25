@@ -16,7 +16,7 @@
         {% if user.is_authenticated %}
           <li>
             <a 
-            hx-get="{%url 'students_list' %}"
+            hx-get="{% url 'teacher_classes' %}"
             hx-trigger="click"
             hx-swap="outerHTML"
             hx-target="#userDashboard">

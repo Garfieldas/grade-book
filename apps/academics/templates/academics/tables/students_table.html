@@ -33,8 +33,8 @@
                <td>
                   <span class="badge badge-outline">{{ item.student_class }}</span>
               </td>
-              <td>
-              <div class="join justify-center">
+              <td class="text-right">
+              <div class="join justify-center gap-2">
                 <button class="btn btn-primary btn-xs join-item add-mark-btn"
                 hx-get= "{% url 'add_mark_by_id' item.id %}"
                 hx-trigger="click"
@@ -42,6 +42,14 @@
                 hx-swap="innerHTML"
                 >
                 <i data-lucide="plus" class="w-4 h-4"></i>
+                </button>
+                <button class="btn btn-secondary btn-xs join-item"
+                hx-get="{% url 'student_marks' item.id %}"
+                hx-trigger="click"
+                hx-target="#userDashboard"
+                hx-swap="innerHTML"
+                >
+                  <i data-lucide="eye" class="w-4 h-4"></i>
                 </button>
               </div>
                 </td>

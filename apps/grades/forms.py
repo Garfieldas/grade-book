@@ -10,63 +10,7 @@ class SubjectChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.name
 
-class AddGrade(forms.Form):
-    def __init__(self, *args, **kwargs):
-        teacher = kwargs.pop('teacher', None)
-        super().__init__(*args, **kwargs)
-        if teacher:
-            self.fields['student'].queryset = get_teacher_students(teacher)
-            self.fields['student'].widget.attrs.update({
-            "hx-get": reverse("get_subjects_for_student"),
-            "hx-trigger": "change",
-            "hx-target": "#id_subject",
-            "hx-swap": "innerHTML",
-            "hx-vals": "js:{student_id: event.target.value}",
-            })
-            semester = Semester.objects.filter(is_active=True).first()
-            self.fields['date'].initial = timezone.now()
-            self.fields['date'].widget.attrs['min'] = semester.start_date
-            self.fields['date'].widget.attrs['max'] = semester.end_date
-        
-        student = self.data.get('student')
-        if student:
-            self.fields['subject'].queryset = get_subjects_for_student(student, teacher)
-
-    def clean(self):
-        cleaned = super().clean()
-
-        student = cleaned.get("student")
-        subject = cleaned.get("subject")
-        date    = cleaned.get("date")
-        value   = cleaned.get("value")
-
-        semester = Semester.objects.filter(is_active=True).first()
-
-        if value is not None and not (2 <= value <= 10):
-            self.add_error("value", "Pažymys turi būti tarp 2 ir 10.")
-
-        if student is None:
-            self.add_error("student", "Pasirinkite mokinį.")
-
-        if subject is None:
-            self.add_error("subject", "Pasirinkite dalyką.")
-
-        if date is None:
-            self.add_error("date", "Data privaloma.")
-        elif semester and not (semester.start_date <= date <= semester.end_date):
-            self.add_error("date", f"Data turi būti tarp {semester.start_date} ir {semester.end_date}.")
-
-        if student and subject and date and semester:
-            if Mark.objects.filter(
-            student=student,
-            subject=subject,
-            mark_date=date,
-            semester=semester
-            ).exists():
-                self.add_error("date", "Mokinys jau turi pažymį šiai datai.")
-
-        return cleaned
-        
+class AddGrade(forms.Form):        
     student = forms.ModelChoiceField(
         label='Mokinys',
         queryset=User.objects.none(),
@@ -87,6 +31,63 @@ class AddGrade(forms.Form):
         decimal_places=2,
         widget=forms.NumberInput(attrs={'class': 'input input-bordered',})
     )
+    def __init__(self, *args, **kwargs):
+        teacher = kwargs.pop('teacher', None)
+        super().__init__(*args, **kwargs)
+        if teacher:
+            self.fields['student'].queryset = get_teacher_students(teacher)
+            self.fields['student'].widget.attrs.update({
+            "hx-get": reverse("get_subjects_for_student"),
+            "hx-trigger": "change",
+            "hx-target": "#id_subject",
+            "hx-swap": "innerHTML",
+            "hx-vals": "js:{student_id: event.target.value}",
+            })
+            semester = Semester.objects.filter(is_active=True).first()
+            today = timezone.now().date()
+            self.fields['date'].initial = today
+            self.fields['date'].widget.attrs['min'] = semester.start_date
+            self.fields['date'].widget.attrs['max'] = today
+        
+        student = self.data.get('student')
+        if student:
+            self.fields['subject'].queryset = get_subjects_for_student(student, teacher)
+
+    def clean(self):
+        cleaned = super().clean()
+
+        student = cleaned.get("student")
+        subject = cleaned.get("subject")
+        date    = cleaned.get("date")
+        value   = cleaned.get("value")
+        today = timezone.now().date()
+
+        semester = Semester.objects.filter(is_active=True).first()
+
+        if value is not None and not (2 <= value <= 10):
+            self.add_error("value", "Pažymys turi būti tarp 2 ir 10.")
+
+        if student is None:
+            self.add_error("student", "Pasirinkite mokinį.")
+
+        if subject is None:
+            self.add_error("subject", "Pasirinkite dalyką.")
+
+        if date is None:
+            self.add_error("date", "Data privaloma.")
+        elif semester and not (semester.start_date <= date <= today):
+            self.add_error("date", f"Data turi būti tarp {semester.start_date} ir {today}.")
+
+        if student and subject and date and semester:
+            if Mark.objects.filter(
+            student=student,
+            subject=subject,
+            mark_date=date,
+            semester=semester
+            ).exists():
+                self.add_error("date", "Mokinys jau turi pažymį šiai datai.")
+
+        return cleaned
 
 class GradeModal(forms.ModelForm):
     subject = SubjectChoiceField(
@@ -114,9 +115,10 @@ class GradeModal(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if teacher:
             semester = Semester.objects.filter(is_active=True).first()
-            self.fields['date'].initial = timezone.now()
+            today = timezone.now().date()
+            self.fields['date'].initial = today
             self.fields['date'].widget.attrs['min'] = semester.start_date
-            self.fields['date'].widget.attrs['max'] = semester.end_date
+            self.fields['date'].widget.attrs['max'] = today
         
         student = User.objects.get(pk=self.student_id)
         if student:
@@ -128,6 +130,7 @@ class GradeModal(forms.ModelForm):
         subject = cleaned.get("subject")
         date    = cleaned.get("date")
         value   = cleaned.get("value")
+        today = timezone.now().date()
 
         semester = Semester.objects.filter(is_active=True).first()
         student = User.objects.get(pk=self.student_id)
@@ -140,8 +143,8 @@ class GradeModal(forms.ModelForm):
 
         if date is None:
             self.add_error("date", "Data privaloma.")
-        elif semester and not (semester.start_date <= date <= semester.end_date):
-            self.add_error("date", f"Data turi būti tarp {semester.start_date} ir {semester.end_date}.")
+        elif semester and not (semester.start_date <= date <= today):
+            self.add_error("date", f"Data turi būti tarp {semester.start_date} ir {today}.")
 
         if student and subject and date and semester:
             if Mark.objects.filter(
@@ -152,4 +155,52 @@ class GradeModal(forms.ModelForm):
             ).exists():
                 self.add_error("date", "Mokinys jau turi pažymį šiai datai.")
 
+        return cleaned
+
+class EditGrade(forms.ModelForm):
+    mark_date = forms.DateField(
+        label="Data",
+        widget=forms.DateInput(attrs={"type": "date", "class": "input input-bordered w-full"})
+    )
+    value = forms.DecimalField(
+        label="Pažymys",
+        max_digits=3,
+        decimal_places=1,
+        widget=forms.NumberInput(attrs={"class": "input input-bordered w-full"})
+    )
+
+    class Meta:
+        model = Mark
+        fields = ["mark_date", "value"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        semester = Semester.objects.filter(is_active=True).first()
+        today = timezone.now().date()
+        if semester:
+            self.fields["mark_date"].widget.attrs["min"] = str(semester.start_date)
+        self.fields["mark_date"].widget.attrs["max"] = str(today)
+
+    def clean(self):
+        cleaned = super().clean()
+        value = cleaned.get("value")
+        mark_date = cleaned.get("mark_date")
+        today = timezone.now().date()
+        semester = Semester.objects.filter(is_active=True).first()
+
+        if value is not None and not (2 <= value <= 10):
+            self.add_error("value", "Pažymys turi būti tarp 2 ir 10.")
+
+        if mark_date and semester and not (semester.start_date <= mark_date <= today):
+            self.add_error("mark_date", f"Data turi būti tarp {semester.start_date} ir {today}.")
+
+        if self.instance.pk and mark_date:
+            exists = Mark.objects.filter(
+                student=self.instance.student,
+                subject=self.instance.subject,
+                semester=self.instance.semester,
+                mark_date=mark_date
+            ).exclude(pk=self.instance.pk).exists()
+            if exists:
+                self.add_error("mark_date", "Šiai datai jau yra pažymys.")
         return cleaned
